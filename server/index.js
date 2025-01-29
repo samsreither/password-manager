@@ -1,33 +1,28 @@
 const express = require('express');
-const app = express()
-const mysql = require('mysql');
-const PORT = 3001
 const cors = require('cors');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
 
-app.use(cors())
-app.use(express.json())
+const app = express();
 
+app.use(express.json());
+app.use(cors());
 
-const db = mysql.createConnection({
-    user: 'root',
-    host: 'localhost',
-    password: 'password',
-    database: 'PasswordManager'
-})
+// // schema for storing password and title
+// const passwordSchema = new mongoose.Schema({
+//     password: String,
+//     title: String,
+//   });
 
+// // model
+// const Password = mongoose.model('Password', passwordSchema);
 
-app.post('/addpassword', (req, res) => {
-    const { password, title } = req.body;
+mongoose.connect('mongodb+srv://samsreither:<db_password>@password-manager.54xbf.mongodb.net/?retryWrites=true&w=majority&appName=password-manager').then(() => {console.log('mongodb connected')}).catch((err) => console.error('mongodb connection error', err))
 
-    db.query("INSERT INTO passwords (password, title) VALUES (?,?)", [password, title], (err, result) => {
-        if (err) {
-            console.log(err)
-        } else {
-            res.send('Success');
-        }
-    })
-})
+// app.post('/addpassword', (req, res) => {
+//     const { password, title } = req.body;
+// })
 
-app.listen(PORT, () => {
+app.listen(3001, () => {
     console.log('Server is running')
 })
